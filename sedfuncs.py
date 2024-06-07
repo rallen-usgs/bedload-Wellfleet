@@ -138,7 +138,7 @@ def m94( ubr, wr, ucr, zr, phiwc, kN, iverbose=False ):
     Cmu[0] = 1.
     cukw = Cmu[0]*ubr/(kN*wr)
     print(Cmu[0], cukw)
-    fwci[0] = fwc94( Cmu[0], cukw ) #Eqn. 32 or 33
+    fwci[0] = fwc94( Cmu[0], cukw )                 #Eqn. 32 or 33
     ustrwm2[0]= 0.5*fwci[0]*ubr*ubr                 #Eqn. 29
     ustrr2[0] = Cmu[0]*ustrwm2[0]                   #Eqn. 26
     ustrr = np.sqrt( ustrr2[0] )
@@ -147,27 +147,27 @@ def m94( ubr, wr, ucr, zr, phiwc, kN, iverbose=False ):
         dwci[0]= 2.*vk*ustrr/wr
     lnzr = np.log(zr/dwci[0])
     lndw = np.log(dwci[0]/zo)
-    lnln = np.lnzr/lndw
-    bigsqr = (-1.+np.sqrt(1+ ((4.*vk*lndw)/(lnzr*lnzr))*ucr/ustrr ))
+    lnln = lnzr/lndw
+    bigsqr = (-1.+np.sqrt(1+ ((4.*vk*lndw)/(lnzr*lnzr))*ucr/ustrr))
     ustrci[0] = 0.5*ustrr*lnln*bigsqr
     nit = 1
 
     for i in range(1,MAXIT):      
         rmu[i] = ustrci[i-1]*ustrci[i-1]/ustrwm2[i-1]
-        Cmu[i] = np.sqrt(1.+2.*rmu[i]*cosphiwc+rmu[i]*rmu[i])#Eqn 27
+        Cmu[i] = np.sqrt(1.+2.*rmu[i]*cosphiwc+rmu[i]*rmu[i]) #Eqn 27
         cukw = Cmu[i]*ubr/(kN*wr)
-        fwci[i] = fwc94( Cmu[i], cukw )   #Eqn. 32 or 33
-        ustrwm2[i]= 0.5*fwci[i]*ubr*ubr                   #Eqn. 29
-        ustrr2[i] = Cmu[i]*ustrwm2[i]                     #Eqn. 26
+        fwci[i] = fwc94( Cmu[i], cukw )               #Eqn. 32 or 33
+        ustrwm2[i]= 0.5*fwci[i]*ubr*ubr               #Eqn. 29
+        ustrr2[i] = Cmu[i]*ustrwm2[i]                 #Eqn. 26
         ustrr = np.sqrt( ustrr2[i] )
         dwci[i] = kN
         if ((Cmu[i]*ubr/(kN*wr))>= 8.):
-            dwci[i]= 2.*vk*ustrr/wr #Eqn.36
+            dwci[i]= 2.*vk*ustrr/wr                   #Eqn.36
         lnzr = np.log( zr/dwci[i] )
-        lndw = np.abslog( dwci[i]/zo )
+        lndw = np.log(dwci[i]/zo)
         lnln = lnzr/lndw
-        bigsqr = (-1.+np.sqrt(1+ ((4.*vk*lndw)/(lnzr*lnzr))*ucr/ustrr ))
-        ustrci[i] = 0.5*ustrr*lnln*bigsqr                  #Eqn. 38
+        bigsqr = (-1.+np.sqrt(1+ ((4.*vk*lndw)/(lnzr*lnzr))*ucr/ustrr))
+        ustrci[i] = 0.5*ustrr*lnln*bigsqr              #Eqn. 38
         diffw = abs( (fwci[i]-fwci[i-1])/fwci[i] )
         # print i,diffw
         if(diffw < 0.0005):
@@ -185,7 +185,7 @@ def m94( ubr, wr, ucr, zr, phiwc, kN, iverbose=False ):
         for i in range(nit):
             print( \
             'i={0} fwc={1} dwc={2} u*c={3} u*wm={4} u*r={5}'\
-	    """  """.format(i,fwci[i],dwci[i],ustrci[i],sqrt(ustrwm2[i]),sqrt(ustrr2[i])))
+	    """  """.format(i,fwci[i],dwci[i],ustrci[i],np.sqrt(ustrwm2[i]),np.sqrt(ustrr2[i])))
 
     return ustrc, ustrr, ustrwm, dwc, fwc, zoa
 
@@ -200,12 +200,12 @@ def fwc94( cmu, cukw ):
     """
     fwc = 0.00999 #meaningless (small) return value
     if( cukw <= 0. ):
-        print('ERROR: cukw too small in fwc94: {0}\n'.format( cukw ))
+        print('ERROR: cukw too small in fwc94: {0}\n'.format(cukw))
         return fwc
 
     if( cukw < 0.2 ):
         fwc = np.exp( 7.02*0.2**(-0.078) - 8.82 )
-        print('WARNING: cukw very small in fwc94: {0}\n'.format( cukw ))
+        print('WARNING: cukw very small in fwc94: {0}\n'.format(cukw))
     if( (cukw >= 0.2) and (cukw <= 100.) ):
         fwc = cmu*np.exp( 7.02*cukw**(-0.078)-8.82 )
     elif( (cukw > 100.) and (cukw <= 10000.) ):
